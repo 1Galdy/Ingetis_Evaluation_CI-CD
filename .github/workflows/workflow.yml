@@ -6,15 +6,16 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: write
+
 jobs:
 
   test-html:
     runs-on: ubuntu-latest
-
     steps:
       - name: Récupération du code
         uses: actions/checkout@v3
-
       - name: Vérification syntaxe HTML
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
@@ -24,11 +25,9 @@ jobs:
     needs: test-html
     if: success()
     runs-on: ubuntu-latest
-
     steps:
       - name: Récupération du code
         uses: actions/checkout@v3
-
       - name: Déploiement vers GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -42,11 +41,9 @@ jobs:
       - self-hosted
       - linux
       - x64
-
     steps:
       - name: Récupération du code
         uses: actions/checkout@v3
-
       - name: Déploiement sur le serveur local
         run: |
           echo "Déploiement en cours sur le runner..."
