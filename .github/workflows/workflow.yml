@@ -1,4 +1,4 @@
-name: CI/CD - Test HTML et Déploiement Runner
+name: CI/CD - Test HTML et Déploiements
 
 on:
   push:
@@ -20,10 +20,24 @@ jobs:
         with:
           root: .
 
+  deploy-github-pages:
+    needs: test-html
+    if: success()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v3
+
+      - name: Déploiement vers GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+
   deploy-runner:
     needs: test-html
     if: success()
-
     runs-on:
       - self-hosted
       - linux
@@ -38,3 +52,4 @@ jobs:
           echo "Déploiement en cours sur le runner..."
           sudo cp -r * /var/www/html/
           echo "Déploiement terminé."
+
